@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>X DKV 1 Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        customLight1: '#DFDAC2',
+                        customLight2: '#D4D3B3',
+                        customLight3: '#8D926F',
+                        customLight4: '#4E5138',
+                        customDark1: '#24301E',
+                        customDark2: '#332C0F',
+                        customDark3: '#474329',
+                        customDarkAccent: '#EAC3BF',
+                        customDarkMuted: '#BCB893'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8D926F;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-customLight1 dark:bg-customDark1 text-customLight4 dark:text-customLight1 min-h-screen pb-28 transition-colors duration-300">
+
+    <!-- Top App Bar -->
+    <header class="sticky top-0 z-40 bg-customLight2/90 dark:bg-customDark2/90 backdrop-blur-md border-b border-customLight3/30 dark:border-customDark3 px-4 py-3 flex items-center justify-between shadow-sm">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-customLight3 dark:bg-customDark3 flex items-center justify-center text-white font-bold text-lg shadow-inner">
+                DKV
+            </div>
+            <div>
+                <h1 class="font-bold text-base leading-tight tracking-tight">X DKV 1</h1>
+                <p class="text-xs opacity-75">Design Komunikasi Visual</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <!-- Theme Toggle -->
+            <button onclick="toggleDarkMode()" aria-label="Ganti Tema" class="w-10 h-10 rounded-full bg-customLight1 dark:bg-customDark1 border border-customLight3/30 dark:border-customDark3 flex items-center justify-center transition active:scale-95">
+                <span id="themeIcon" class="text-lg">🌙</span>
+            </button>
+            <!-- Admin Lock Status Button -->
+            <button onclick="openAdminModal()" id="adminStatusBtn" aria-label="Status Admin" class="px-3 py-1.5 rounded-full text-xs font-semibold bg-customLight3 text-white dark:bg-customDark3 flex items-center space-x-1 shadow-sm transition active:scale-95">
+                <span id="adminLockIcon">🔒</span>
+                <span id="adminStatusText">Admin</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main id="mainContainer" class="max-w-md mx-auto p-4 space-y-4">
+        <!-- Dynamic Tabs Content will be injected here -->
+    </main>
+
+    <!-- Bottom Navigation Bar (Large, High, Touch-Friendly, Fixed) -->
+    <nav aria-label="Navigasi Utama" class="fixed bottom-0 left-0 right-0 z-40 bg-customLight2 dark:bg-customDark2 border-t border-customLight3/30 dark:border-customDark3 shadow-2xl pb-safe">
+        <div class="max-w-md mx-auto grid grid-cols-6 h-20 px-1 items-center">
+            <!-- Tab Home -->
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center justify-center h-full py-1 text-customLight4 dark:text-customLight1 transition hover:opacity-100">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all">🏠</div>
+                <span class="text-[10px] font-semibold tracking-tight mt-0.5">Home</span>
+            </button>
+            <!-- Tab Siswa -->
+            <button onclick="switchTab('siswa')" id="nav-siswa" class="flex flex-col items-center justify-center h-full py-1 opacity-60 hover:opacity-100 transition">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all">🎓</div>
+                <span class="text-[10px] font-semibold tracking-tight mt-0.5">Siswa</span>
+            </button>
+            <!-- Tab Absen -->
+            <button onclick="switchTab('absen')" id="nav-absen" class="flex flex-col items-center justify-center h-full py-1 opacity-60 hover:opacity-100 transition">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all">📋</div>
+                <span class="text-[10px] font-semibold tracking-tight mt-0.5">Absen</span>
+            </button>
+            <!-- Tab Jadwal -->
+            <button onclick="switchTab('jadwal')" id="nav-jadwal" class="flex flex-col items-center justify-center h-full py-1 opacity-60 hover:opacity-100 transition">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all">📅</div>
+                <span class="text-[10px] font-semibold tracking-tight mt-0.5">Jadwal</span>
+            </button>
+            <!-- Tab Kas -->
+            <button onclick="switchTab('kas')" id="nav-kas" class="flex flex-col items-center justify-center h-full py-1 opacity-60 hover:opacity-100 transition">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all">💰</div>
+                <span class="text-[10px] font-semibold tracking-tight mt-0.5">Kas</span>
+            </button>
+            <!-- Tab Struktur -->
+            <button onclick="switchTab('struktur')" id="nav-struktur" class="flex flex-col items-center justify-center h-full py-1 opacity-60 hover:opacity-100 transition">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl transition-all">🏛️</div>
+                <span class="text-[10px] font-semibold tracking-tight mt-0.5">Struktur</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Modals Container -->
+    <div id="modalContainer"></div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        /* --- Application State & Storage --- */
+        const STORAGE_KEY = 'xdkv1_app_data_v2';
+        
+        const defaultData = {
+            isAdmin: false,
+            currentTab: 'home',
+            scheduleMode: 'ganjil', // 'ganjil' or 'genap'
+            students: [
+                {
+                    id: 1, name: "Ahmad Fauzi", nis: "1001", nisn: "0081234561", age: 15, birthDate: "12 Januari 2011",
+                    parents: "Budi Santoso (Ayah)", religion: "Islam", juniorHigh: "SMPN 1 Kota", address: "Jl. Merdeka No. 45",
+                    tb: "170 cm", bb: "55 kg", career: "UI/UX Designer", hobby: "Digital Drawing", photo: "https://placehold.co/150x150/8D926F/ffffff?text=AF"
+                },
+                {
+                    id: 2, name: "Bella Salsabila", nis: "1002", nisn: "0081234562", age: 15, birthDate: "24 Maret 2011",
+                    parents: "Siti Aminah (Ibu)", religion: "Islam", juniorHigh: "SMPN 3 Kota", address: "Jl. Melati Blok C2",
+                    tb: "160 cm", bb: "48 kg", career: "Illustrator", hobby: "Watercolor", photo: "https://placehold.co/150x150/4E5138/ffffff?text=BS"
+                },
+                {
+                    id: 3, name: "Chandra Wijaya", nis: "1003", nisn: "0081234563", age: 16, birthDate: "5 Juli 2010",
+                    parents: "Agus Wijaya (Ayah)", religion: "Buddha", juniorHigh: "SMP Sutomo", address: "Jl. Pahlawan No. 12",
+                    tb: "175 cm", bb: "62 kg", career: "Animators", hobby: "Gaming & 3D Modeling", photo: "https://placehold.co/150x150/24301E/ffffff?text=CW"
+                },
+                {
+                    id: 4, name: "Dewi Lestari", nis: "1004", nisn: "0081234564", age: 15, birthDate: "19 Oktober 2011",
+                    parents: "Joko Widodo (Ayah)", religion: "Islam", juniorHigh: "SMPN 5 Kota", address: "Jl. Kenanga Indah",
+                    tb: "158 cm", bb: "46 kg", career: "Graphic Designer", hobby: "Photography", photo: "https://placehold.co/150x150/474329/ffffff?text=DL"
+                },
+                {
+                    id: 5, name: "Eko Prasetyo", nis: "1005", nisn: "0081234565", age: 16, birthDate: "30 November 2010",
+                    parents: "Slamet (Ayah)", religion: "Islam", juniorHigh: "SMPN 2 Kota", address: "Jl. Diponegoro 88",
+                    tb: "168 cm", bb: "58 kg", career: "Videographer", hobby: "Editing Video", photo: "https://placehold.co/150x150/332C0F/ffffff?text=EP"
+                }
+            ],
+            attendance: {
+                "2026-06-06": { 1: "Hadir", 2: "Hadir", 3: "Sakit", 4: "Izin", 5: "Hadir" }
+            },
+            schedule: {
+                ganjil: [
+                    { day: "Senin", subjects: ["Upacara Bendera", "Pendidikan Agama", "Matematika", "Bahasa Indonesia", "Seni Rupa Dasar"] },
+                    { day: "Selasa", subjects: ["IPAS", "Bahasa Inggris", "Informatika", "Sejarah", "Pancasila"] },
+                    { day: "Rabu", subjects: ["Dasar-Dasar DKV", "Matematika", "PJOK", "Seni Budaya", "Bimbingan Konseling"] },
+                    { day: "Kamis", subjects: ["Dasar-Dasar DKV", "Bahasa Indonesia", "IPAS", "Muatan Lokal", "Pancasila"] },
+                    { day: "Jumat", subjects: ["Literasi & Rohis", "Prakarya", "Ekstrakurikuler Wajib"] }
+                ],
+                genap: [
+                    { day: "Senin", subjects: ["Upacara Bendera", "Matematika", "Bahasa Inggris", "Dasar-Dasar DKV", "Pendidikan Agama"] },
+                    { day: "Selasa", subjects: ["Seni Rupa Terapan", "IPAS", "Informatika", "Bahasa Indonesia", "Sejarah"] },
+                    { day: "Rabu", subjects: ["Praktik Komputer Grafis", "PJOK", "Matematika", "Bimbingan Konseling"] },
+                    { day: "Kamis", subjects: ["Animasi 2D Dasar", "Pancasila", "IPAS", "Bahasa Inggris", "Muatan Lokal"] },
+                    { day: "Jumat", subjects: ["Senam Sehat", "Kewirausahaan", "Ekstrakurikuler Pilihan"] }
+                ]
+            },
+            cash: {
+                balance: 350000,
+                transactions: [
+                    { id: 1, date: "2026-06-01", desc: "Kas Mingguan Periode 1", type: "in", amount: 100000 },
+                    { id: 2, date: "2026-06-03", desc: "Beli Spidol & Penghapus Papan", type: "out", amount: 25000 }
+                ]
+            },
+            structure: [
+                { role: "Wali Kelas", name: "Dra. Hj. Nurul Hidayah, M.Pd", photo: "https://placehold.co/150x150/8D926F/ffffff?text=WK" },
+                { role: "Ketua Kelas", name: "Ahmad Fauzi", photo: "https://placehold.co/150x150/4E5138/ffffff?text=KK" },
+                { role: "Wakil Ketua", name: "Bella Salsabila", photo: "https://placehold.co/150x150/24301E/ffffff?text=WK2" },
+                { role: "Sekretaris", name: "Dewi Lestari", photo: "https://placehold.co/150x150/474329/ffffff?text=SEC" },
+                { role: "Bendahara", name: "Chandra Wijaya", photo: "https://placehold.co/150x150/332C0F/ffffff?text=BEN" }
+            ]
+        };
+
+        let appData = loadData();
+
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try { return JSON.parse(saved); } catch(e) { console.error(e); }
+            }
+            return defaultData;
+        }
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        }
+
+        /* --- Initialization & Startup Carousel Modal --- */
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            render();
+            // Check if startup carousel was shown this session
+            if (!sessionStorage.getItem('carousel_shown')) {
+                showStartupCarousel();
+                sessionStorage.setItem('carousel_shown', 'true');
+            }
+        });
+
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').textContent = '☀️';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('themeIcon').textContent = '🌙';
+            }
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('themeIcon').textContent = '🌙';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('themeIcon').textContent = '☀️';
+            }
+        }
+
+        function switchTab(tabId) {
+            appData.currentTab = tabId;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function render() {
+            // Update Navigation active states
+            const tabs = ['home', 'siswa', 'absen', 'jadwal', 'kas', 'struktur'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                if (!btn) return;
+                if (t === appData.currentTab) {
+                    btn.classList.remove('opacity-60');
+                    btn.classList.add('text-customLight4', 'dark:text-customLight1', 'font-bold');
+                    const iconDiv = btn.querySelector('div');
+                    iconDiv.classList.add('bg-customLight3/20', 'dark:bg-customDark3');
+                } else {
+                    btn.classList.add('opacity-60');
+                    btn.classList.remove('text-customLight4', 'dark:text-customLight1', 'font-bold');
+                    const iconDiv = btn.querySelector('div');
+                    iconDiv.classList.remove('bg-customLight3/20', 'dark:bg-customDark3');
+                }
+            });
+
+            // Update Admin Badge
+            const statusBtn = document.getElementById('adminStatusText');
+            const lockIcon = document.getElementById('adminLockIcon');
+            if (appData.isAdmin) {
+                statusBtn.textContent = "Admin Aktif";
+                lockIcon.textContent = "🔓";
+                document.getElementById('adminStatusBtn').classList.add('bg-emerald-600', 'dark:bg-emerald-700');
+            } else {
+                statusBtn.textContent = "Admin";
+                lockIcon.textContent = "🔒";
+                document.getElementById('adminStatusBtn').classList.remove('bg-emerald-600', 'dark:bg-emerald-700');
+            }
+
+            // Render Tab Content
+            const container = document.getElementById('mainContainer');
+            switch (appData.currentTab) {
+                case 'home': container.innerHTML = renderHome(); break;
+                case 'siswa': container.innerHTML = renderSiswa(); break;
+                case 'absen': container.innerHTML = renderAbsen(); break;
+                case 'jadwal': container.innerHTML = renderJadwal(); break;
+                case 'kas': container.innerHTML = renderKas(); break;
+                case 'struktur': container.innerHTML = renderStruktur(); break;
+            }
+        }
+
+        /* --- Renderers for Tabs --- */
+
+        function renderHome() {
+            const totalSiswa = appData.students.length;
+            const todayKey = new Date().toISOString().split('T')[0];
+            const todayAbsen = appData.attendance[todayKey] || {};
+            let hadirCount = 0;
+            Object.values(todayAbsen).forEach(v => { if(v === 'Hadir') hadirCount++; });
+
+            return `
+                <div class="space-y-4">
+                    <!-- Hero Banner -->
+                    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-customLight3 to-customLight4 dark:from-customDark2 dark:to-customDark3 p-6 text-white shadow-xl">
+                        <div class="absolute -right-4 -bottom-4 opacity-15 text-9xl">🎨</div>
+                        <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-md mb-2">Tahun Ajaran 2025/2026</span>
+                        <h2 class="text-2xl font-bold tracking-tight">Selamat Datang di X DKV 1</h2>
+                        <p class="text-sm opacity-90 mt-1">Pusat Informasi dan Manajemen Kelas Desain Komunikasi Visual.</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 mt-6">
+                            <div class="bg-black/15 backdrop-blur-md rounded-2xl p-3 border border-white/10">
+                                <p class="text-xs opacity-80">Total Siswa</p>
+                                <p class="text-xl font-bold mt-0.5">${totalSiswa} Siswa</p>
+                            </div>
+                            <div class="bg-black/15 backdrop-blur-md rounded-2xl p-3 border border-white/10">
+                                <p class="text-xs opacity-80">Kas Kelas</p>
+                                <p class="text-xl font-bold mt-0.5">Rp ${appData.cash.balance.toLocaleString('id-ID')}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Announcement / Info Card -->
+                    <div class="bg-customLight2/60 dark:bg-customDark2 rounded-3xl p-5 border border-customLight3/20 dark:border-customDark3 shadow-sm space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xl">📢</span>
+                            <h3 class="font-bold text-sm">Pengumuman Kelas</h3>
+                        </div>
+                        <p class="text-xs leading-relaxed opacity-90">
+                            Pengumpulan tugas ilustrasi digital mata pelajaran Dasar-Dasar DKV paling lambat hari Jumat pukul 15.00 WIB. Pastikan file tersimpan dalam format PNG resolusi tinggi.
+                        </p>
+                    </div>
+
+                    <!-- Quick Navigation Cards -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="switchTab('siswa')" class="bg-customLight2/60 dark:bg-customDark2 p-4 rounded-3xl border border-customLight3/20 dark:border-customDark3 text-left space-y-2 transition active:scale-95 shadow-sm">
+                            <div class="w-10 h-10 rounded-2xl bg-customLight3/20 dark:bg-customDark3 flex items-center justify-center text-xl">🎓</div>
+                            <div>
+                                <h4 class="font-bold text-sm">Data Siswa</h4>
+                                <p class="text-[11px] opacity-75">Lihat biodata lengkap</p>
+                            </div>
+                        </button>
+                        <button onclick="switchTab('jadwal')" class="bg-customLight2/60 dark:bg-customDark2 p-4 rounded-3xl border border-customLight3/20 dark:border-customDark3 text-left space-y-2 transition active:scale-95 shadow-sm">
+                            <div class="w-10 h-10 rounded-2xl bg-customLight3/20 dark:bg-customDark3 flex items-center justify-center text-xl">📅</div>
+                            <div>
+                                <h4 class="font-bold text-sm">Jadwal Pelajaran</h4>
+                                <p class="text-[11px] opacity-75">Ganjil & Genap</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSiswa() {
+            const adminActions = appData.isAdmin ? `
+                <button onclick="openStudentModal()" class="w-full py-3 rounded-2xl bg-customLight3 text-white dark:bg-customDark3 font-semibold text-sm shadow-md transition active:scale-95 flex items-center justify-center space-x-2">
+                    <span>➕</span>
+                    <span>Tambah Siswa Baru</span>
+                </button>
+            ` : '';
+
+            let listHtml = appData.students.map((s, idx) => `
+                <div class="bg-customLight2/60 dark:bg-customDark2 rounded-2xl p-4 border border-customLight3/20 dark:border-customDark3 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center space-x-3 cursor-pointer flex-1" onclick="openStudentDetail(${s.id})">
+                        <img src="${s.photo}" alt="${s.name}" class="w-12 h-12 rounded-xl object-cover border border-customLight3/30" onerror="this.src='https://placehold.co/150x150/8D926F/ffffff?text=S'">
+                        <div>
+                            <h4 class="font-bold text-sm leading-tight">${s.name}</h4>
+                            <p class="text-xs opacity-75 mt-0.5">NIS: ${s.nis} | ${s.career}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <button onclick="openStudentDetail(${s.id})" class="px-3 py-1.5 rounded-xl bg-customLight3/20 dark:bg-customDark3 text-xs font-semibold transition active:scale-95">Detail</button>
+                        ${appData.isAdmin ? `
+                            <button onclick="openStudentModal(${s.id})" class="p-2 rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs transition active:scale-95" title="Edit">✏️</button>
+                            <button onclick="deleteStudent(${s.id})" class="p-2 rounded-xl bg-rose-500/20 text-rose-700 dark:text-rose-300 text-xs transition active:scale-95" title="Hapus">🗑️</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-bold">Daftar Siswa</h2>
+                            <p class="text-xs opacity-75">Kelas X DKV 1 (${appData.students.length} Siswa)</p>
+                        </div>
+                    </div>
+                    ${adminActions}
+                    <div class="space-y-3">
+                        ${listHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAbsen() {
+            const todayKey = new Date().toISOString().split('T')[0];
+            if (!appData.attendance[todayKey]) {
+                appData.attendance[todayKey] = {};
+                appData.students.forEach(s => { appData.attendance[todayKey][s.id] = 'Hadir'; });
+                saveData();
+            }
+
+            const currentAbsen = appData.attendance[todayKey];
+
+            let studentRows = appData.students.map((s, idx) => {
+                const status = currentAbsen[s.id] || 'Hadir';
+                let badgeClass = 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300';
+                if(status === 'Izin') badgeClass = 'bg-blue-500/20 text-blue-700 dark:text-blue-300';
+                if(status === 'Sakit') badgeClass = 'bg-amber-500/20 text-amber-700 dark:text-amber-300';
+                if(status === 'Alpa') badgeClass = 'bg-rose-500/20 text-rose-700 dark:text-rose-300';
+
+                const statusControl = appData.isAdmin ? `
+                    <select onchange="updateAttendance(${s.id}, this.value)" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-customLight1 dark:bg-customDark1 border border-customLight3/30 dark:border-customDark3 outline-none">
+                        <option value="Hadir" ${status === 'Hadir' ? 'selected' : ''}>Hadir</option>
+                        <option value="Izin" ${status === 'Izin' ? 'selected' : ''}>Izin</option>
+                        <option value="Sakit" ${status === 'Sakit' ? 'selected' : ''}>Sakit</option>
+                        <option value="Alpa" ${status === 'Alpa' ? 'selected' : ''}>Alpa</option>
+                    </select>
+                ` : `
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold ${badgeClass}">${status}</span>
+                `;
+
+                return `
+                    <div class="flex items-center justify-between p-3 rounded-2xl bg-customLight2/60 dark:bg-customDark2 border border-customLight3/20 dark:border-customDark3">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-6 text-xs font-bold opacity-60 text-center">${idx+1}</span>
+                            <div>
+                                <h4 class="font-bold text-sm">${s.name}</h4>
+                                <p class="text-[11px] opacity-75">NIS: ${s.nis}</p>
+                            </div>
+                        </div>
+                        <div>${statusControl}</div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-bold">Absensi Harian</h2>
+                        <p class="text-xs opacity-75">Tanggal: ${new Date().toLocaleDateString('id-ID', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                    </div>
+                    ${!appData.isAdmin ? `<p class="text-xs italic opacity-70 bg-customLight2/40 dark:bg-customDark2 p-3 rounded-xl border border-customLight3/20">💡 Mode Admin terkunci. Login sebagai admin untuk mengubah status absensi siswa.</p>` : ''}
+                    <div class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1">
+                        ${studentRows}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderJadwal() {
+            const isGanjil = appData.scheduleMode === 'ganjil';
+            const currentScheduleList = appData.schedule[appData.scheduleMode] || [];
+
+            let scheduleHtml = currentScheduleList.map(item => `
+                <div class="bg-customLight2/60 dark:bg-customDark2 rounded-2xl p-4 border border-customLight3/20 dark:border-customDark3 space-y-3 shadow-sm">
+                    <div class="flex items-center justify-between border-b border-customLight3/20 dark:border-customDark3 pb-2">
+                        <h3 class="font-bold text-sm flex items-center space-x-2">
+                            <span>📅</span>
+                            <span>${item.day}</span>
+                        </h3>
+                        <span class="text-xs px-2.5 py-1 rounded-lg bg-customLight3/20 dark:bg-customDark3 font-semibold">${item.subjects.length} Mapel</span>
+                    </div>
+                    <ul class="space-y-1.5 pl-2">
+                        ${item.subjects.map((sub, i) => `
+                            <li class="text-xs flex items-center space-x-2">
+                                <span class="w-4 h-4 rounded-full bg-customLight3/30 dark:bg-customDark3 text-[10px] font-bold flex items-center justify-center">${i+1}</span>
+                                <span class="font-medium">${sub}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
+            return `
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-bold">Jadwal Pelajaran</h2>
+                        <p class="text-xs opacity-75">Pilih mode minggu ganjil atau genap</p>
+                    </div>
+
+                    <!-- Ganjil / Genap Toggle Switch -->
+                    <div class="grid grid-cols-2 p-1 bg-customLight2 dark:bg-customDark2 rounded-2xl border border-customLight3/30 dark:border-customDark3">
+                        <button onclick="setScheduleMode('ganjil')" class="py-2.5 rounded-xl font-bold text-xs transition ${isGanjil ? 'bg-customLight3 text-white dark:bg-customDark3 shadow-sm' : 'opacity-70'}">
+                            Minggu Ganjil
+                        </button>
+                        <button onclick="setScheduleMode('genap')" class="py-2.5 rounded-xl font-bold text-xs transition ${!isGanjil ? 'bg-customLight3 text-white dark:bg-customDark3 shadow-sm' : 'opacity-70'}">
+                            Minggu Genap
+                        </button>
+                    </div>
+
+                    <div class="space-y-3">
+                        ${scheduleHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderKas() {
+            const adminTx = appData.isAdmin ? `
+                <button onclick="openCashModal()" class="w-full py-3 rounded-2xl bg-customLight3 text-white dark:bg-customDark3 font-semibold text-sm shadow-md transition active:scale-95 flex items-center justify-center space-x-2">
+                    <span>➕</span>
+                    <span>Catat Transaksi Kas</span>
+                </button>
+            ` : '';
+
+            let txHtml = appData.cash.transactions.map(tx => {
+                const isIn = tx.type === 'in';
+                return `
+                    <div class="bg-customLight2/60 dark:bg-customDark2 rounded-2xl p-4 border border-customLight3/20 dark:border-customDark3 flex items-center justify-between shadow-sm">
+                        <div class="space-y-0.5">
+                            <h4 class="font-bold text-sm">${tx.desc}</h4>
+                            <p class="text-[11px] opacity-75">${tx.date}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-sm ${isIn ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
+                                ${isIn ? '+' : '-'} Rp ${tx.amount.toLocaleString('id-ID')}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-bold">Kas Kelas</h2>
+                        <p class="text-xs opacity-75">Laporan keuangan & saldo kas X DKV 1</p>
+                    </div>
+
+                    <!-- Balance Card -->
+                    <div class="rounded-3xl bg-gradient-to-br from-customLight3 to-customLight4 dark:from-customDark2 dark:to-customDark3 p-5 text-white shadow-xl space-y-1">
+                        <p class="text-xs opacity-80 uppercase tracking-wider font-semibold">Total Saldo Kas</p>
+                        <h3 class="text-3xl font-extrabold">Rp ${appData.cash.balance.toLocaleString('id-ID')}</h3>
+                    </div>
+
+                    ${adminTx}
+
+                    <div class="space-y-3">
+                        <h3 class="font-bold text-sm">Riwayat Transaksi</h3>
+                        ${txHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStruktur() {
+            let structHtml = appData.structure.map(st => `
+                <div class="bg-customLight2/60 dark:bg-customDark2 rounded-2xl p-4 border border-customLight3/20 dark:border-customDark3 flex items-center space-x-4 shadow-sm">
+                    <img src="${st.photo}" alt="${st.name}" class="w-14 h-14 rounded-2xl object-cover border border-customLight3/30" onerror="this.src='https://placehold.co/150x150/8D926F/ffffff?text=P'">
+                    <div>
+                        <span class="inline-block px-2.5 py-0.5 rounded-md bg-customLight3/20 dark:bg-customDark3 text-[10px] font-bold uppercase tracking-wide mb-1">${st.role}</span>
+                        <h4 class="font-bold text-sm">${st.name}</h4>
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="space-y-4">
+                    <div>
+                        <h2 class="text-xl font-bold">Struktur Kelas</h2>
+                        <p class="text-xs opacity-75">Pengurus Kelas X DKV 1 Periode 2025/2026</p>
+                    </div>
+                    <div class="space-y-3">
+                        ${structHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        /* --- Interactive Functions & Modals --- */
+
+        function setScheduleMode(mode) {
+            appData.scheduleMode = mode;
+            render();
+        }
+
+        function updateAttendance(studentId, status) {
+            const todayKey = new Date().toISOString().split('T')[0];
+            appData.attendance[todayKey][studentId] = status;
+            saveData();
+        }
+
+        // Admin Modal
+        function openAdminModal() {
+            if (appData.isAdmin) {
+                appData.isAdmin = false;
+                saveData();
+                render();
+                showToast("Admin berhasil logout");
+                return;
+            }
+
+            const modalHtml = `
+                <div id="customModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-customLight1 dark:bg-customDark1 rounded-3xl p-6 w-full max-w-sm border border-customLight3/30 dark:border-customDark3 space-y-4 shadow-2xl">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-lg">Login Admin</h3>
+                            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-customLight2 dark:bg-customDark2 flex items-center justify-center font-bold">✕</button>
+                        </div>
+                        <p class="text-xs opacity-75">Masukkan password admin untuk membuka fitur CRUD manajemen.</p>
+                        <form onsubmit="handleAdminLogin(event)" class="space-y-3">
+                            <input type="password" id="adminPasswordInput" placeholder="password..." required class="w-full px-4 py-3 rounded-2xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 dark:border-customDark3 text-sm outline-none focus:ring-2 focus:ring-customLight3">
+                            <button type="submit" class="w-full py-3 rounded-2xl bg-customLight3 text-white dark:bg-customDark3 font-semibold text-sm shadow-md transition active:scale-95">Login</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalContainer').innerHTML = modalHtml;
+            setTimeout(() => {
+                document.getElementById('adminPasswordInput').focus();
+            }, 100);
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === 'xdkv1') {
+                appData.isAdmin = true;
+                saveData();
+                closeModal();
+                render();
+                showToast("Login Admin Berhasil!");
+            } else {
+                showToast("Password salah! Gunakan 'xdkv1'");
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modalContainer').innerHTML = '';
+        }
+
+        // Student Detail Modal
+        function openStudentDetail(id) {
+            const s = appData.students.find(item => item.id === id);
+            if (!s) return;
+
+            const modalHtml = `
+                <div id="customModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-customLight1 dark:bg-customDark1 rounded-3xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-customLight3/30 dark:border-customDark3 space-y-4 shadow-2xl">
+                        <div class="flex items-center justify-between border-b border-customLight3/20 dark:border-customDark3 pb-3">
+                            <h3 class="font-bold text-lg">Biodata Siswa</h3>
+                            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-customLight2 dark:bg-customDark2 flex items-center justify-center font-bold">✕</button>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <img src="${s.photo}" alt="${s.name}" class="w-20 h-20 rounded-2xl object-cover border-2 border-customLight3 shadow-sm" onerror="this.src='https://placehold.co/150x150/8D926F/ffffff?text=S'">
+                            <div>
+                                <h4 class="font-bold text-base">${s.name}</h4>
+                                <p class="text-xs opacity-75">NIS: ${s.nis} | NISN: ${s.nisn}</p>
+                                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-customLight3/20 dark:bg-customDark3 text-[10px] font-bold">${s.career}</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-customLight2/60 dark:bg-customDark2 p-3 rounded-2xl border border-customLight3/20"><span class="opacity-75 block">Umur:</span><span class="font-bold">${s.age} Tahun</span></div>
+                            <div class="bg-customLight2/60 dark:bg-customDark2 p-3 rounded-2xl border border-customLight3/20"><span class="opacity-75 block">Tanggal Lahir:</span><span class="font-bold">${s.birthDate}</span></div>
+                            <div class="bg-customLight2/60 dark:bg-customDark2 p-3 rounded-2xl border border-customLight3/20"><span class="opacity-75 block">Orang Tua/Wali:</span><span class="font-bold">${s.parents}</span></div>
+                            <div class="bg-customLight2/60 dark:bg-customDark2 p-3 rounded-2xl border border-customLight3/20"><span class="opacity-75 block">Agama:</span><span class="font-bold">${s.religion}</span></div>
+                            <div class="bg-customLight2/60 dark:bg-customDark2 p-3 rounded-2xl border border-customLight3/20"><span class="opacity-75 block">Asal SMP:</span><span class="font-bold">${s.juniorHigh}</span></div>
+                            <div class="bg-customLight2/60 dark:bg-customDark2 p-3 rounded-2xl border border-customLight3/20"><span class="opacity-75 block">Alamat:</span><span class="font-bold">${s.address}</span></div>
+                            <div class="bg-customLight2/60 dark:bg-customDark2 p-3 rounded-2xl border border-customLight3/20"><span class="opacity-75 block">TB / BB:</span><span class="font-bold">${s.tb} / ${s.bb}</span></div>
+                            <div class="bg-customLight2/60 dark:bg-customDark2 p-3 rounded-2xl border border-customLight3/20"><span class="opacity-75 block">Hobi:</span><span class="font-bold">${s.hobby}</span></div>
+                        </div>
+
+                        <button onclick="closeModal()" class="w-full py-3 rounded-2xl bg-customLight3 text-white dark:bg-customDark3 font-semibold text-sm shadow-md transition active:scale-95">Tutup</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalContainer').innerHTML = modalHtml;
+        }
+
+        // Student Add/Edit Modal (Admin CRUD)
+        function openStudentModal(id = null) {
+            const isEdit = id !== null;
+            const s = isEdit ? appData.students.find(item => item.id === id) : {
+                name: '', nis: '', nisn: '', age: 15, birthDate: '', parents: '', religion: 'Islam', juniorHigh: '', address: '', tb: '165 cm', bb: '50 kg', career: '', hobby: '', photo: ''
+            };
+
+            const modalHtml = `
+                <div id="customModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-customLight1 dark:bg-customDark1 rounded-3xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto border border-customLight3/30 dark:border-customDark3 space-y-4 shadow-2xl">
+                        <div class="flex items-center justify-between border-b border-customLight3/20 dark:border-customDark3 pb-3">
+                            <h3 class="font-bold text-lg">${isEdit ? 'Edit Siswa' : 'Tambah Siswa Baru'}</h3>
+                            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-customLight2 dark:bg-customDark2 flex items-center justify-center font-bold">✕</button>
+                        </div>
+                        <form onsubmit="saveStudent(event, ${isEdit ? id : 'null'})" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">Nama Lengkap</label>
+                                <input type="text" id="formName" value="${s.name}" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold mb-1">NIS</label>
+                                    <input type="text" id="formNis" value="${s.nis}" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold mb-1">NISN</label>
+                                    <input type="text" id="formNisn" value="${s.nisn}" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold mb-1">Umur</label>
+                                    <input type="number" id="formAge" value="${s.age}" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold mb-1">Tanggal Lahir</label>
+                                    <input type="text" id="formBirth" value="${s.birthDate}" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Orang Tua / Wali</label>
+                                <input type="text" id="formParents" value="${s.parents}" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block font-semibold mb-1">Asal SMP</label>
+                                    <input type="text" id="formSmp" value="${s.juniorHigh}" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold mb-1">Cita-Cita</label>
+                                    <input type="text" id="formCareer" value="${s.career}" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 rounded-2xl bg-customLight3 text-white dark:bg-customDark3 font-semibold text-sm shadow-md transition active:scale-95 mt-2">Simpan</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalContainer').innerHTML = modalHtml;
+        }
+
+        function saveStudent(e, id) {
+            e.preventDefault();
+            const dataObj = {
+                name: document.getElementById('formName').value,
+                nis: document.getElementById('formNis').value,
+                nisn: document.getElementById('formNisn').value,
+                age: parseInt(document.getElementById('formAge').value) || 15,
+                birthDate: document.getElementById('formBirth').value,
+                parents: document.getElementById('formParents').value,
+                religion: "Islam",
+                juniorHigh: document.getElementById('formSmp').value,
+                address: "Jl. Contoh Alamat",
+                tb: "168 cm",
+                bb: "55 kg",
+                career: document.getElementById('formCareer').value,
+                hobby: "Desain Grafis",
+                photo: "https://placehold.co/150x150/8D926F/ffffff?text=S"
+            };
+
+            if (id !== null) {
+                const index = appData.students.findIndex(item => item.id === id);
+                if (index !== -1) {
+                    dataObj.id = id;
+                    dataObj.photo = appData.students[index].photo;
+                    appData.students[index] = dataObj;
+                }
+            } else {
+                dataObj.id = Date.now();
+                appData.students.push(dataObj);
+            }
+
+            saveData();
+            closeModal();
+            render();
+            showToast("Data siswa berhasil disimpan!");
+        }
+
+        function deleteStudent(id) {
+            if (confirm("Yakin ingin menghapus data siswa ini?")) {
+                appData.students = appData.students.filter(item => item.id !== id);
+                saveData();
+                render();
+                showToast("Siswa berhasil dihapus");
+            }
+        }
+
+        // Cash Add Modal
+        function openCashModal() {
+            const modalHtml = `
+                <div id="customModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div class="bg-customLight1 dark:bg-customDark1 rounded-3xl p-6 w-full max-w-sm border border-customLight3/30 dark:border-customDark3 space-y-4 shadow-2xl">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-lg">Catat Transaksi Kas</h3>
+                            <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-customLight2 dark:bg-customDark2 flex items-center justify-center font-bold">✕</button>
+                        </div>
+                        <form onsubmit="saveCash(event)" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">Keterangan</label>
+                                <input type="text" id="cashDesc" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Jenis Transaksi</label>
+                                <select id="cashType" class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                                    <option value="in">Pemasukan (+)</option>
+                                    <option value="out">Pengeluaran (-)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Nominal (Rp)</label>
+                                <input type="number" id="cashAmount" required class="w-full px-3 py-2.5 rounded-xl bg-customLight2 dark:bg-customDark2 border border-customLight3/30 outline-none">
+                            </div>
+                            <button type="submit" class="w-full py-3 rounded-2xl bg-customLight3 text-white dark:bg-customDark3 font-semibold text-sm shadow-md transition active:scale-95">Simpan</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalContainer').innerHTML = modalHtml;
+        }
+
+        function saveCash(e) {
+            e.preventDefault();
+            const desc = document.getElementById('cashDesc').value;
+            const type = document.getElementById('cashType').value;
+            const amount = parseInt(document.getElementById('cashAmount').value) || 0;
+
+            if (type === 'in') {
+                appData.cash.balance += amount;
+            } else {
+                appData.cash.balance -= amount;
+            }
+
+            appData.cash.transactions.unshift({
+                id: Date.now(),
+                date: new Date().toISOString().split('T')[0],
+                desc: desc,
+                type: type,
+                amount: amount
+            });
+
+            saveData();
+            closeModal();
+            render();
+            showToast("Transaksi kas berhasil dicatat!");
+        }
+
+        // Startup Carousel Modal
+        function showStartupCarousel() {
+            const modalHtml = `
+                <div id="customModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+                    <div class="bg-customLight1 dark:bg-customDark1 rounded-3xl p-6 w-full max-w-sm border border-customLight3/30 dark:border-customDark3 text-center space-y-4 shadow-2xl">
+                        <div class="w-16 h-16 rounded-3xl bg-customLight3 dark:bg-customDark3 text-white flex items-center justify-center text-3xl mx-auto shadow-inner">
+                            🎨
+                        </div>
+                        <h3 class="font-bold text-xl">X DKV 1 Management</h3>
+                        <p class="text-xs leading-relaxed opacity-80">
+                            Selamat datang di aplikasi manajemen kelas resmi X DKV 1. Akses jadwal ganjil/genap, pantau absensi harian, kelola kas, dan lihat biodata siswa dengan mudah!
+                        </p>
+                        <button onclick="closeModal()" class="w-full py-3 rounded-2xl bg-customLight3 text-white dark:bg-customDark3 font-semibold text-sm shadow-md transition active:scale-95">
+                            Mulai Menjelajah 🚀
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalContainer').innerHTML = modalHtml;
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-customLight4 dark:bg-customDark3 text-white px-4 py-2.5 rounded-2xl text-xs font-semibold shadow-xl transition-all duration-300';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
